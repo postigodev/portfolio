@@ -1,4 +1,5 @@
 import type { Experience } from "@/content/experience";
+import { normalizeText } from "@/lib/utils";
 
 const renderBullet = (text: string) => {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -9,23 +10,25 @@ const renderBullet = (text: string) => {
       </strong>
     ) : (
       <span key={i}>{part}</span>
-    )
+    ),
   );
 };
 
 const ExperienceCard = ({ exp }: { exp: Experience }) => (
-  <div className="border-l-2 border-border pl-5 py-1">
-    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+  <div className="border-l-2 border-border py-1 pl-5">
+    <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
       <div>
         <h3 className="text-base font-semibold text-foreground">{exp.role}</h3>
         <p className="text-sm text-muted-foreground">{exp.company}</p>
       </div>
-      <span className="text-xs font-mono text-muted-foreground shrink-0">{exp.period}</span>
+      <span className="shrink-0 text-xs font-mono text-muted-foreground">
+        {normalizeText(exp.period)}
+      </span>
     </div>
     <ul className="mt-3 space-y-1.5">
       {exp.bullets.map((bullet, i) => (
-        <li key={i} className="text-sm text-muted-foreground leading-relaxed">
-          – {renderBullet(bullet)}
+        <li key={i} className="text-sm leading-relaxed text-muted-foreground">
+          - {renderBullet(normalizeText(bullet))}
         </li>
       ))}
     </ul>

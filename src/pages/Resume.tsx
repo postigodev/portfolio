@@ -1,11 +1,11 @@
 import { Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import Layout from "@/components/Layout";
 import ExperienceCard from "@/components/ExperienceCard";
-import { profile } from "@/content/profile";
+import Layout from "@/components/Layout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { experience } from "@/content/experience";
+import { profile } from "@/content/profile";
 
 const skillSections = [
   { label: "Languages", items: profile.skills.languages },
@@ -29,20 +29,18 @@ const Resume = () => (
         </Button>
       </div>
 
-      {/* Header */}
       <div className="mt-8">
         <h2 className="text-xl font-bold text-foreground">{profile.name}</h2>
         <p className="mt-1 font-mono text-sm text-muted-foreground">{profile.title}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          {profile.location} · {profile.email}
+          {profile.location} | {profile.email}
         </p>
       </div>
 
       <Separator className="my-8" />
 
-      {/* Experience */}
       <section>
-        <h2 className="text-base font-semibold text-foreground uppercase tracking-wide">
+        <h2 className="text-base font-semibold uppercase tracking-wide text-foreground">
           Experience
         </h2>
         <div className="mt-6 space-y-8">
@@ -54,15 +52,12 @@ const Resume = () => (
 
       <Separator className="my-8" />
 
-      {/* Education */}
       <section>
-        <h2 className="text-base font-semibold text-foreground uppercase tracking-wide">
+        <h2 className="text-base font-semibold uppercase tracking-wide text-foreground">
           Education
         </h2>
         <div className="mt-4">
-          <h3 className="text-base font-semibold text-foreground">
-            {profile.education.school}
-          </h3>
+          <h3 className="text-base font-semibold text-foreground">{profile.education.school}</h3>
           <p className="text-sm text-muted-foreground">
             {profile.education.degree} | {profile.education.graduation}
           </p>
@@ -74,11 +69,8 @@ const Resume = () => (
 
       <Separator className="my-8" />
 
-      {/* Skills */}
       <section>
-        <h2 className="text-base font-semibold text-foreground uppercase tracking-wide">
-          Skills
-        </h2>
+        <h2 className="text-base font-semibold uppercase tracking-wide text-foreground">Skills</h2>
         <div className="mt-4 space-y-4">
           {skillSections.map((section) => (
             <div key={section.label}>

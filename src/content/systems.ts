@@ -46,29 +46,29 @@ export const systems: System[] = [
         "Retailer integration had to remain modular rather than hard-coded into the planning model",
       ],
       architecture:
-        "The system is structured around explicit domain states and a modular backend.\n\n• Recipes act as reusable source objects\n• CartDraft captures editable planning intent\n• Cart represents a structured generated result\n• ShoppingCart serves as the retailer-facing output layer\n\nThe backend is built with NestJS, PostgreSQL, and Prisma. Authenticated users can manage recipes, drafts, and cart resources while provider-aware logic handles downstream matching without collapsing the core planning model into retailer-specific behavior.",
-      architectureDiagram: `┌──────────────┐
-│   Recipes    │
-│ (Saved Base) │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│  CartDraft   │
-│ Planning     │
-│ Intent       │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│    Cart      │
-│ Structured   │
-│ Generation   │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│ ShoppingCart │
-│ Retailer-    │
-│ Aware Output │
-└──────────────┘`,
+        "The system is structured around explicit domain states and a modular backend.\n\n- Recipes act as reusable source objects\n- CartDraft captures editable planning intent\n- Cart represents a structured generated result\n- ShoppingCart serves as the retailer-facing output layer\n\nThe backend is built with NestJS, PostgreSQL, and Prisma. Authenticated users can manage recipes, drafts, and cart resources while provider-aware logic handles downstream matching without collapsing the core planning model into retailer-specific behavior.",
+      architectureDiagram: `+----------------+
+|    Recipes     |
+|  saved base    |
++-------+--------+
+        |
+        v
++----------------+
+|   CartDraft    |
+| planning state |
++-------+--------+
+        |
+        v
++----------------+
+|      Cart      |
+| structured gen |
++-------+--------+
+        |
+        v
++----------------+
+|  ShoppingCart  |
+| retailer layer |
++----------------+`,
       keyDecisions: [
         {
           decision: "Separated planning state from retailer-facing output",
@@ -76,7 +76,7 @@ export const systems: System[] = [
             "Prevents shopping-provider logic from contaminating the core planning model and keeps the system extensible",
         },
         {
-          decision: "Used explicit state transitions across Recipe → CartDraft → Cart → ShoppingCart",
+          decision: "Used explicit state transitions across Recipe -> CartDraft -> Cart -> ShoppingCart",
           reasoning:
             "Makes the workflow easier to reason about, persist, and evolve without mixing user intent with generated outputs",
         },
@@ -133,30 +133,32 @@ export const systems: System[] = [
         "Spotify auth and playback handling needed to work through desktop-managed OAuth and cached tokens",
       ],
       architecture:
-        "DeskRemote is built around a Rust workspace and a Tauri desktop shell.\n\n• Rust core handles configuration, Fire TV communication, Spotify auth and playback logic, and reusable bindings\n• Tauri provides the native desktop shell and command bridge\n• TypeScript frontend provides the local control UI\n• ADB over TCP enables Fire TV connection, wake, launch, and key events\n• Spotify integration handles token caching, device lookup, and playback transfer/toggle logic\n\nBindings, tray actions, and global hotkeys form a reusable execution layer on top of the underlying device commands.",
-      architectureDiagram: `┌──────────────┐
-│ Desktop UI   │
-│ (TypeScript) │
-└──────┬───────┘
-       ▼
-┌──────────────┐
-│ Tauri Shell  │
-│ Command      │
-│ Bridge       │
-└──────┬───────┘
-       ▼
-┌─────────────────────────────┐
-│ Rust Core                   │
-│ • Config                    │
-│ • Bindings                  │
-│ • Spotify Logic             │
-│ • Fire TV Control           │
-└──────┬───────────────┬──────┘
-       ▼               ▼
-┌──────────────┐   ┌──────────────┐
-│ Spotify API  │   │ Fire TV ADB  │
-│ OAuth / Conn │   │ over TCP     │
-└──────────────┘   └──────────────┘`,
+        "DeskRemote is built around a Rust workspace and a Tauri desktop shell.\n\n- Rust core handles configuration, Fire TV communication, Spotify auth and playback logic, and reusable bindings\n- Tauri provides the native desktop shell and command bridge\n- TypeScript frontend provides the local control UI\n- ADB over TCP enables Fire TV connection, wake, launch, and key events\n- Spotify integration handles token caching, device lookup, and playback transfer/toggle logic\n\nBindings, tray actions, and global hotkeys form a reusable execution layer on top of the underlying device commands.",
+      architectureDiagram: `+------------------+
+|   Desktop UI     |
+|   TypeScript     |
++---------+--------+
+          |
+          v
++---------+--------+
+|    Tauri Shell   |
+|   command bridge |
++---------+--------+
+          |
+          v
++-------------------------------+
+|           Rust Core           |
+| config | bindings | Spotify   |
+| Fire TV control | execution   |
++-----------+-------------------+
+            | 
+      +-----+-----+
+      |           |
+      v           v
++-------------+ +-------------+
+| Spotify API | | Fire TV ADB |
+| OAuth/ctrl  | | over TCP    |
++-------------+ +-------------+`,
       keyDecisions: [
         {
           decision: "Separated the Rust core from the desktop UI",

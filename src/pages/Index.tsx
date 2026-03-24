@@ -1,16 +1,17 @@
+import { FileText, Github, Linkedin, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Github, Linkedin, FileText, Mail } from "lucide-react";
+import ExperienceCard from "@/components/ExperienceCard";
+import GitHubRepoCard from "@/components/GitHubRepoCard";
+import Layout from "@/components/Layout";
+import SystemCard from "@/components/SystemCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import Layout from "@/components/Layout";
-import SystemCard from "@/components/SystemCard";
-import ExperienceCard from "@/components/ExperienceCard";
-import GitHubRepoCard from "@/components/GitHubRepoCard";
-import { profile } from "@/content/profile";
 import { experience } from "@/content/experience";
+import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
 import { useGitHubRepos } from "@/hooks/use-github-repos";
+import { normalizeText } from "@/lib/utils";
 
 const Index = () => {
   const featuredExperience = experience.filter((e) => e.featured);
@@ -18,16 +19,11 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* Hero */}
       <section className="max-w-2xl">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          {profile.name}
-        </h1>
-        <p className="mt-2 font-mono text-sm text-muted-foreground">
-          {profile.title}
-        </p>
-        <p className="mt-4 text-base text-muted-foreground leading-relaxed">
-          {profile.intro}
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{profile.name}</h1>
+        <p className="mt-2 font-mono text-sm text-muted-foreground">{profile.title}</p>
+        <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+          {normalizeText(profile.intro)}
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Button size="sm" asChild>
@@ -55,7 +51,6 @@ const Index = () => {
 
       <Separator className="my-12" />
 
-      {/* Experience */}
       <section className="max-w-2xl">
         <h2 className="text-lg font-semibold text-foreground">Experience</h2>
         <div className="mt-6 space-y-8">
@@ -67,32 +62,30 @@ const Index = () => {
 
       <Separator className="my-12" />
 
-      {/* Selected Systems */}
       <section className="max-w-2xl">
         <h2 className="text-lg font-semibold text-foreground">Selected Systems</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Key systems I designed and built — not side projects.
+          Key systems I designed and built - not side projects.
         </p>
         <div className="mt-6 grid gap-4">
-          {systems.map((s) => (
-            <SystemCard key={s.id} system={s} />
+          {systems.map((system) => (
+            <SystemCard key={system.id} system={system} />
           ))}
         </div>
       </section>
 
       <Separator className="my-12" />
 
-      {/* Open Source */}
       <section className="max-w-2xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             Open Source
           </h2>
           <Link
             to="/projects"
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
-            View all →
+            View all -&gt;
           </Link>
         </div>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -103,9 +96,7 @@ const Index = () => {
             ? Array.from({ length: 4 }).map((_, i) => (
                 <Skeleton key={i} className="h-28 rounded-lg" />
               ))
-            : repos?.slice(0, 4).map((repo) => (
-                <GitHubRepoCard key={repo.id} repo={repo} />
-              ))}
+            : repos?.slice(0, 4).map((repo) => <GitHubRepoCard key={repo.id} repo={repo} />)}
         </div>
       </section>
     </Layout>

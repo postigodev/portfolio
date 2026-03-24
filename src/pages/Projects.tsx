@@ -13,22 +13,20 @@ const Projects = () => {
   return (
     <Layout>
       <div className="max-w-2xl">
-        {/* Selected Systems */}
         <section>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Selected Systems</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Key systems I designed and built — not side projects.
+            Key systems I designed and built - not side projects.
           </p>
           <div className="mt-8 grid gap-4">
-            {systems.map((s) => (
-              <SystemCard key={s.id} system={s} />
+            {systems.map((system) => (
+              <SystemCard key={system.id} system={system} />
             ))}
           </div>
         </section>
 
         <Separator className="my-12" />
 
-        {/* Open Source */}
         <section>
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold text-foreground">Open Source</h2>
@@ -36,9 +34,9 @@ const Projects = () => {
               href="https://github.com/postigodev"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              github.com/postigodev →
+              github.com/postigodev -&gt;
             </a>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -55,7 +53,7 @@ const Projects = () => {
 
           {error && (
             <p className="mt-6 text-sm text-muted-foreground">
-              Unable to load repositories right now.
+              Showing curated repositories while GitHub is unavailable.
             </p>
           )}
 

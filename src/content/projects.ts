@@ -20,7 +20,7 @@ export const projects: Project[] = [
     slug: "coaktiva-automation",
     title: "Coaktiva Automation Platform",
     description:
-      "Stateful backend system integrating WhatsApp Cloud API, OpenAI, and n8n for automated debt recovery communications. Reduced manual workload by ~30–40%.",
+      "Stateful backend system integrating WhatsApp Cloud API, OpenAI, and n8n for automated debt recovery communications. Reduced manual workload by ~30-40%.",
     stack: ["Node.js", "n8n", "OpenAI API", "WhatsApp Cloud API", "MongoDB"],
     featured: true,
     detail: {

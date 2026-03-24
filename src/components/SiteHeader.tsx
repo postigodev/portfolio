@@ -13,8 +13,11 @@ const SiteHeader = () => {
   return (
     <header className="border-b border-border">
       <div className="container flex h-14 items-center justify-between">
-        <Link to="/" className="font-mono text-sm font-medium text-foreground hover:text-muted-foreground transition-colors">
-          🐐 {profile.name.toLowerCase().replace(/\s+/g, ".")}
+        <Link
+          to="/"
+          className="font-mono text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
+        >
+          {profile.name.toLowerCase().replace(/\s+/g, ".")}
         </Link>
         <nav className="flex items-center gap-6">
           {navItems.map((item) => (
@@ -23,7 +26,7 @@ const SiteHeader = () => {
               to={item.path}
               className={`text-sm transition-colors ${
                 location.pathname === item.path
-                  ? "text-foreground font-medium"
+                  ? "font-medium text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >

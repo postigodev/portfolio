@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { fallbackRepos } from "@/content/open-source";
 
 export interface GitHubRepo {
   id: number;
@@ -82,6 +83,12 @@ const fetchGitHubRepos = async (): Promise<GitHubRepo[]> => {
 export const useGitHubRepos = () =>
   useQuery({
     queryKey: ["github-repos"],
-    queryFn: fetchGitHubRepos,
+    queryFn: async () => {
+      try {
+        return await fetchGitHubRepos();
+      } catch {
+        return fallbackRepos;
+      }
+    },
     staleTime: 1000 * 60 * 10,
   });
