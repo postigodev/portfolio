@@ -17,17 +17,17 @@ const GitHubRepoCard = ({ repo }: { repo: GitHubRepo }) => (
     </div>
     {repo.description && (
       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-        {repo.description}
+        {repo.displayDescription ?? repo.description}
       </p>
     )}
     <div className="mt-3 flex flex-wrap gap-1.5">
-      {repo.language && (
-        <Badge variant="secondary" className="text-xs font-mono font-normal">
-          {repo.language}
-        </Badge>
-      )}
-      {repo.topics?.slice(0, 4).map((topic) => (
-        <Badge key={topic} variant="outline" className="text-xs font-mono font-normal">
+      {repo.language && ( <Badge variant="secondary" className="text-xs font-mono font-normal"> {repo.language} </Badge> )}
+      {(repo.displayTopics ?? repo.topics.slice(0, 4)).map((topic) => (
+        <Badge
+          key={topic}
+          variant="outline"
+          className="text-xs font-mono font-normal"
+        >
           {topic}
         </Badge>
       ))}

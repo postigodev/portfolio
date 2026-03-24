@@ -10,18 +10,73 @@ export interface GitHubRepo {
   stargazers_count: number;
   topics: string[];
   fork: boolean;
+
+  // Presentation-layer overrides
+  displayDescription?: string;
+  displayTopics?: string[];
+  displayOrder?: number;
+  hidden?: boolean;
 }
+
+type RepoOverride = {
+  displayDescription?: string;
+  displayTopics?: string[];
+  displayOrder?: number;
+  hidden?: boolean;
+};
+
+const repoOverrides: Record<string, RepoOverride> = {
+  deskremote: {
+    displayDescription:
+      "desktop control system coordinating Spotify playback and Fire TV devices through a unified local interface.",
+    displayTopics: ["tauri", "typescript", "adb", "spotify"],
+    displayOrder: 1,
+  },
+  "cart-generator": {
+    displayDescription:
+      "stateful planning system that transforms saved recipes into structured, retailer-aware shopping carts.",
+    displayTopics: [
+      "nestjs",
+      "postgresql",
+      "planning",
+      "systems",
+    ],
+    displayOrder: 2,
+  }
+};
 
 const fetchGitHubRepos = async (): Promise<GitHubRepo[]> => {
   const res = await fetch(
     "https://api.github.com/users/postigodev/repos?sort=updated&per_page=30",
-    { headers: { Accept: "application/vnd.github.mercy-preview+json" } }
+    { headers: { Accept: "application/vnd.github.mercy-preview+json" } },
   );
+
   if (!res.ok) throw new Error("Failed to fetch GitHub repos");
+
   const repos: GitHubRepo[] = await res.json();
+
   return repos
-    .filter((r) => !r.fork && r.name !== "postigodev")
-    .sort((a, b) => b.stargazers_count - a.stargazers_count);
+    .filter((repo) => !repo.fork && repo.name !== "postigodev")
+    .map((repo) => {
+      const override = repoOverrides[repo.name];
+
+      return {
+        ...repo,
+        displayDescription: override?.displayDescription ?? repo.description,
+        displayTopics: override?.displayTopics ?? repo.topics,
+        displayOrder: override?.displayOrder ?? Number.MAX_SAFE_INTEGER,
+        hidden: override?.hidden ?? false,
+      };
+    })
+    .filter((repo) => !repo.hidden)
+    .sort((a, b) => {
+      const orderDiff =
+        (a.displayOrder ?? Number.MAX_SAFE_INTEGER) -
+        (b.displayOrder ?? Number.MAX_SAFE_INTEGER);
+      if (orderDiff !== 0) return orderDiff;
+
+      return b.stargazers_count - a.stargazers_count;
+    });
 };
 
 export const useGitHubRepos = () =>

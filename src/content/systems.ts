@@ -28,11 +28,11 @@ export const systems: System[] = [
     slug: "cussien",
     title: "Cussien Cart Generation System",
     problem:
-      "Meal planning and grocery generation are usually fragmented across saved recipes, personal constraints, and manual shopping lists.",
+      "Meal planning and grocery generation are fragmented across recipes, constraints, and manual lists.",
     system:
-      "Full-stack planning system that transforms saved recipes and user constraints into structured, retailer-aware shopping carts through explicit state transitions.",
+      "Full-stack planning system that transforms recipes into structured, retailer-aware carts through explicit state transitions.",
     impact:
-      "Created a reusable operational layer for recipe-based planning, separating user intent from purchase-ready cart outputs.",
+      "Reusable operational layer separating user intent from purchase-ready outputs.",
     stack: ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Prisma"],
     repoUrl: "https://github.com/postigodev/cart-generator",
     detail: {
@@ -99,7 +99,7 @@ export const systems: System[] = [
         },
       ],
       impactDetail: [
-        "Established a reusable planning pipeline instead of a thin recipe interface",
+        "Replaced ad-hoc recipe planning with a persistent, state-driven workflow",
         "Enabled persistent draft and cart workflows with real authenticated user state",
         "Created a foundation for provider-aware cart generation without collapsing the system into a static shopping list tool",
       ],
@@ -117,9 +117,9 @@ export const systems: System[] = [
     problem:
       "Controlling Spotify playback and Fire TV behavior from a desktop environment is fragmented across separate apps, devices, and manual steps.",
     system:
-      "Desktop control system that coordinates Spotify playback, Fire TV commands, bindings, and local device state through a Tauri-based architecture.",
+      "Desktop system coordinating Spotify playback, Fire TV commands, and local bindings through a Tauri-based architecture.",
     impact:
-      "Unified multi-step media control into a reusable local control surface with persistent configuration, hotkeys, and cross-device execution.",
+      "Unified control surface with persistent config, hotkeys, and cross-device execution.",
     stack: ["Rust", "Tauri", "TypeScript", "ADB", "Spotify API"],
     repoUrl: "https://github.com/postigodev/deskremote",
     detail: {

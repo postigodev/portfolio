@@ -1,24 +1,25 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { Github } from "lucide-react";
+import { Github, ExternalLink } from "lucide-react";
 import type { System } from "@/content/systems";
 
 const SystemCard = ({ system }: { system: System }) => {
   return (
-    <div className="rounded-lg border border-border p-5 space-y-3 hover:border-foreground/20 transition-colors">
+    <div className="group rounded-lg border border-border p-5 space-y-3 hover:border-foreground/20 transition-colors">
       {/* CLICKABLE MAIN AREA */}
       <Link to={`/systems/${system.slug}`} className="block space-y-2.5">
-        <h3 className="text-base font-semibold text-foreground">
-          {system.title}
-        </h3>
-
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-base font-semibold text-foreground">
+            {system.title}
+          </h3> 
+          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+        </div>
         <div className="space-y-1 text-sm leading-relaxed">
           <p className="text-muted-foreground">{system.problem}</p>
           <p className="text-foreground">{system.system}</p>
           <p className="text-foreground font-medium">{system.impact}</p>
         </div>
       </Link>
-
       {/* STACK */}
       <div className="flex flex-wrap gap-1.5 pt-1">
         {system.stack.map((tech) => (
