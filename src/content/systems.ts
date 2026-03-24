@@ -6,6 +6,7 @@ export interface System {
   system: string;
   impact: string;
   stack: string[];
+  repoUrl?: string;
   detail?: SystemDetail;
 }
 
@@ -23,210 +24,177 @@ export interface SystemDetail {
 
 export const systems: System[] = [
   {
-    id: "customer-ops",
-    slug: "customer-ops",
-    title: "Stateful Customer Operations System",
+    id: "cussien",
+    slug: "cussien",
+    title: "Cussien Cart Generation System",
     problem:
-      "Fragmented, manual customer communication and document workflows.",
+      "Meal planning and grocery generation are usually fragmented across saved recipes, personal constraints, and manual shopping lists.",
     system:
-      "Stateful backend combining AI intent classification with deterministic workflow execution.",
+      "Full-stack planning system that transforms saved recipes and user constraints into structured, retailer-aware shopping carts through explicit state transitions.",
     impact:
-      "Reduced manual workload by ~30–40% and unified messaging, validation, and approval processes.",
-    stack: ["Node.js", "n8n", "OpenAI API", "WhatsApp Cloud API", "Google Sheets"],
+      "Created a reusable operational layer for recipe-based planning, separating user intent from purchase-ready cart outputs.",
+    stack: ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Prisma"],
+    repoUrl: "https://github.com/postigodev/cart-generator",
     detail: {
       overview:
-        "This system automates customer communication workflows that previously required manual coordination. It handles both outbound messaging and real-time inbound responses, while maintaining a consistent operational state across interactions.",
+        "Cussien is a planning and cart-generation system designed to turn saved recipes into structured shopping outputs. Instead of behaving like a static recipe app, it models planning as a persistent workflow with explicit intermediate states, allowing user preferences, saved recipes, and downstream retailer logic to interact in a controlled way.",
       problemDetail:
-        "Customer operations relied on fragmented tools (WhatsApp, email, spreadsheets) and manual coordination. This led to inconsistent workflows, lost state, and high operational overhead.\n\nNaive automation approaches using AI directly resulted in unpredictable behavior and unreliable execution.",
-      architecture:
-        "The system is structured around a stateful backend that coordinates multiple services:\n\n• WhatsApp API for messaging\n• OpenAI for intent classification\n• n8n for workflow orchestration\n• Google Sheets as a persistent state layer\n\nIncoming messages are classified into bounded actions, which are then routed through deterministic workflows. Each interaction updates a shared state record, ensuring consistency across the system.",
-      architectureDiagram: `┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│  WhatsApp   │────▶│  Intent      │────▶│  Action Router  │
-│  Cloud API  │     │  Classifier  │     │  (Bounded)      │
-└─────────────┘     │  (OpenAI)    │     └────────┬────────┘
-                    └──────────────┘              │
-                                                  ▼
-                                        ┌─────────────────┐
-                                        │  n8n Workflows  │
-                                        │  (Deterministic)│
-                                        └────────┬────────┘
-                                                  │
-                                                  ▼
-                                        ┌─────────────────┐
-                                        │  Shared State   │
-                                        │  (Google Sheets)│
-                                        └─────────────────┘`,
-      keyDecisions: [
-        {
-          decision: "Separated AI reasoning from execution",
-          reasoning: "Ensures workflows remain deterministic and reliable",
-        },
-        {
-          decision: "Introduced bounded action routing",
-          reasoning: "Prevents uncontrolled AI-driven behavior",
-        },
-        {
-          decision: "Used shared state (Google Sheets)",
-          reasoning: "Allows visibility and persistence across all interactions",
-        },
-      ],
-      tradeoffs: [
-        {
-          tradeoff: "Google Sheets as state store",
-          reasoning: "Simple and accessible, but not scalable for high concurrency",
-        },
-        {
-          tradeoff: "Workflow orchestration via n8n",
-          reasoning: "Flexible, but adds dependency on external tooling",
-        },
-      ],
-      impactDetail: [
-        "Reduced manual communication workload by ~30–40%",
-        "Unified messaging, validation, and approval processes",
-        "Enabled consistent handling of hundreds of daily interactions",
-      ],
-      futureWork: [
-        "Replace Google Sheets with a proper state store (e.g. PostgreSQL or Redis)",
-        "Add observability layer for workflow tracing and failure detection",
-      ],
-    },
-  },
-  {
-    id: "infra-pipeline",
-    slug: "infra-pipeline",
-    title: "Infrastructure & Data Pipeline System",
-    problem:
-      "Manual data handling and unreliable infrastructure workflows.",
-    system:
-      "Automated ingestion, transformation, and virtualized infrastructure using OVH + Proxmox.",
-    impact:
-      "Improved system performance (~2x) and enabled scalable, repeatable data processing.",
-    stack: ["Node.js", "MongoDB", "Docker", "OVH", "Proxmox", "Linux"],
-    detail: {
-      overview:
-        "An infrastructure system designed to automate data ingestion, transformation, and deployment pipelines across virtualized environments. It replaced manual, error-prone workflows with repeatable, containerized processes.",
-      problemDetail:
-        "Data pipelines were managed manually — ingestion was ad-hoc, transformation scripts were fragile, and infrastructure provisioning required direct intervention on bare-metal servers.\n\nThis created bottlenecks: data inconsistencies, slow deployments, and no reproducibility across environments.",
+        "Most recipe and grocery tools collapse several distinct problems into one interface: recipe storage, planning, ingredient aggregation, normalization, and shopping execution. That makes the system hard to extend and often leaves users manually reconciling inconsistent recipe formats, duplicated ingredients, and retailer-specific purchase decisions.\n\nThe core challenge was to represent meal planning as an operational system rather than a collection of UI screens.",
       constraints: [
-        "Infrastructure had to run on OVH dedicated servers, not cloud-native services",
-        "Budget constraints prevented use of managed Kubernetes or equivalent",
+        "User-facing planning state had to remain persistent across sessions",
+        "Cart generation needed to stay deterministic and auditable even when AI-assisted transformations were introduced",
+        "Retailer integration had to remain modular rather than hard-coded into the planning model",
       ],
       architecture:
-        "The system operates across three layers:\n\n• Data ingestion: automated collection and validation from external sources into MongoDB\n• Transformation pipeline: containerized processing stages using Docker, orchestrated sequentially\n• Infrastructure layer: Proxmox-based virtualization on OVH bare metal, with scripted provisioning\n\nEach layer is independently deployable and monitored through system-level logging.",
-      architectureDiagram: `┌──────────────────┐
-│  External Data   │
-│  Sources         │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐     ┌──────────────────┐
-│  Ingestion       │────▶│  MongoDB         │
-│  (Node.js)       │     │  (Raw Store)     │
-└──────────────────┘     └────────┬─────────┘
-                                  ▼
-                         ┌──────────────────┐
-                         │  Transform       │
-                         │  (Docker)        │
-                         └────────┬─────────┘
-                                  ▼
-                         ┌──────────────────┐
-                         │  Proxmox / OVH   │
-                         │  (Infra Layer)   │
-                         └──────────────────┘`,
+        "The system is structured around explicit domain states and a modular backend.\n\n• Recipes act as reusable source objects\n• CartDraft captures editable planning intent\n• Cart represents a structured generated result\n• ShoppingCart serves as the retailer-facing output layer\n\nThe backend is built with NestJS, PostgreSQL, and Prisma. Authenticated users can manage recipes, drafts, and cart resources while provider-aware logic handles downstream matching without collapsing the core planning model into retailer-specific behavior.",
+      architectureDiagram: `┌──────────────┐
+│   Recipes    │
+│ (Saved Base) │
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│  CartDraft   │
+│ Planning     │
+│ Intent       │
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│    Cart      │
+│ Structured   │
+│ Generation   │
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ ShoppingCart │
+│ Retailer-    │
+│ Aware Output │
+└──────────────┘`,
       keyDecisions: [
         {
-          decision: "Used Proxmox for virtualization instead of Kubernetes",
-          reasoning: "Simpler operational model for the team size and infra constraints",
+          decision: "Separated planning state from retailer-facing output",
+          reasoning:
+            "Prevents shopping-provider logic from contaminating the core planning model and keeps the system extensible",
         },
         {
-          decision: "Containerized each pipeline stage independently",
-          reasoning: "Enables isolated testing and independent scaling of each step",
+          decision: "Used explicit state transitions across Recipe → CartDraft → Cart → ShoppingCart",
+          reasoning:
+            "Makes the workflow easier to reason about, persist, and evolve without mixing user intent with generated outputs",
         },
         {
-          decision: "MongoDB as the primary data store",
-          reasoning: "Schema flexibility was critical for evolving data sources",
+          decision: "Kept aggregation, matching, and pricing logic deterministic",
+          reasoning:
+            "Ensures cart generation remains inspectable and reliable even when AI is used for bounded transformations",
         },
       ],
       tradeoffs: [
         {
-          tradeoff: "No managed orchestration (Airflow, Prefect)",
-          reasoning: "Reduced complexity but limited scheduling and retry capabilities",
+          tradeoff: "More domain modeling upfront",
+          reasoning:
+            "The system is more complex than a simple recipe CRUD app, but gains much stronger extensibility and consistency",
         },
         {
-          tradeoff: "Proxmox over cloud-native",
-          reasoning: "Lower cost but higher operational burden for maintenance",
+          tradeoff: "Retailer support is modular rather than deeply integrated",
+          reasoning:
+            "This slows down provider-specific optimization in the short term, but avoids overfitting the entire architecture to one retailer",
         },
       ],
       impactDetail: [
-        "Improved system performance by approximately 2×",
-        "Enabled scalable, repeatable data processing pipelines",
-        "Reduced deployment time from hours to minutes",
+        "Established a reusable planning pipeline instead of a thin recipe interface",
+        "Enabled persistent draft and cart workflows with real authenticated user state",
+        "Created a foundation for provider-aware cart generation without collapsing the system into a static shopping list tool",
       ],
       futureWork: [
-        "Introduce a lightweight orchestration layer for pipeline scheduling",
-        "Add monitoring and alerting for pipeline failures",
-        "Evaluate migration path to cloud-native infrastructure",
+        "Expand provider integrations beyond the current retailer matching layer",
+        "Strengthen cart-generation observability and validation flows",
+        "Refine AI-assisted recipe transformation while keeping downstream execution deterministic",
       ],
     },
   },
   {
-    id: "cimax-medical",
-    slug: "cimax-medical",
-    title: "Cimax Medical Operations System",
+    id: "deskremote",
+    slug: "deskremote",
+    title: "DeskRemote",
     problem:
-      "Manual scheduling and billing coordination across medical staff.",
+      "Controlling Spotify playback and Fire TV behavior from a desktop environment is fragmented across separate apps, devices, and manual steps.",
     system:
-      "Full-stack backend system with structured data models and real-time query capabilities.",
+      "Desktop control system that coordinates Spotify playback, Fire TV commands, bindings, and local device state through a Tauri-based architecture.",
     impact:
-      "Supported 50+ doctors and replaced manual coordination workflows.",
-    stack: ["MERN", "MongoDB", "Express", "React"],
+      "Unified multi-step media control into a reusable local control surface with persistent configuration, hotkeys, and cross-device execution.",
+    stack: ["Rust", "Tauri", "TypeScript", "ADB", "Spotify API"],
+    repoUrl: "https://github.com/postigodev/deskremote",
     detail: {
       overview:
-        "A full-stack operations system built for a medical organization to manage scheduling, billing, and staff coordination. It replaced spreadsheet-based workflows with a structured, queryable backend serving a real-time web interface.",
+        "DeskRemote is a desktop application for coordinating Spotify playback and Fire TV actions from Windows. Rather than acting as a single-purpose remote, it provides a local execution layer that combines device communication, Spotify auth and playback logic, reusable action bindings, and global hotkeys inside one desktop system.",
       problemDetail:
-        "Medical staff coordination — scheduling, billing, and patient assignment — was managed through spreadsheets and phone calls. This led to scheduling conflicts, billing errors, and no centralized visibility into operations.\n\nExisting off-the-shelf solutions were either too expensive or too rigid for the organization's workflows.",
+        "Spotify playback control and Fire TV interaction are usually split across different interfaces: phone apps, TV remotes, desktop Spotify clients, and device-specific setup steps. That fragmentation creates friction for simple repeated actions like launching Spotify on the TV, transferring playback, or triggering common media controls.\n\nThe challenge was not just sending commands, but building a stable desktop system that could coordinate local state, auth flows, device targeting, and reusable actions.",
+      constraints: [
+        "The system had to run locally on Windows as a desktop app",
+        "Fire TV communication depended on ADB over TCP and local network reachability",
+        "Spotify auth and playback handling needed to work through desktop-managed OAuth and cached tokens",
+      ],
       architecture:
-        "The system follows a MERN architecture:\n\n• MongoDB for flexible data modeling of doctors, schedules, patients, and billing records\n• Express API layer with role-based access control\n• React frontend with real-time schedule views and billing dashboards\n\nThe data model is designed around relationships between doctors, time slots, and billing events, supporting complex queries like availability checks and revenue aggregation.",
-      architectureDiagram: `┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  React UI    │────▶│  Express API │────▶│  MongoDB     │
-│  (Schedules, │     │  (RBAC)      │     │  (Doctors,   │
-│   Billing)   │     └──────────────┘     │   Slots,     │
-└──────────────┘                          │   Billing)   │
-       ▲                                  └──────┬───────┘
-       │                                         │
-       └─────────── polling updates ─────────────┘`,
+        "DeskRemote is built around a Rust workspace and a Tauri desktop shell.\n\n• Rust core handles configuration, Fire TV communication, Spotify auth and playback logic, and reusable bindings\n• Tauri provides the native desktop shell and command bridge\n• TypeScript frontend provides the local control UI\n• ADB over TCP enables Fire TV connection, wake, launch, and key events\n• Spotify integration handles token caching, device lookup, and playback transfer/toggle logic\n\nBindings, tray actions, and global hotkeys form a reusable execution layer on top of the underlying device commands.",
+      architectureDiagram: `┌──────────────┐
+│ Desktop UI   │
+│ (TypeScript) │
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ Tauri Shell  │
+│ Command      │
+│ Bridge       │
+└──────┬───────┘
+       ▼
+┌─────────────────────────────┐
+│ Rust Core                   │
+│ • Config                    │
+│ • Bindings                  │
+│ • Spotify Logic             │
+│ • Fire TV Control           │
+└──────┬───────────────┬──────┘
+       ▼               ▼
+┌──────────────┐   ┌──────────────┐
+│ Spotify API  │   │ Fire TV ADB  │
+│ OAuth / Conn │   │ over TCP     │
+└──────────────┘   └──────────────┘`,
       keyDecisions: [
         {
-          decision: "Built custom instead of adapting off-the-shelf",
-          reasoning: "Existing tools didn't support the organization's specific scheduling logic",
+          decision: "Separated the Rust core from the desktop UI",
+          reasoning:
+            "Keeps device communication and execution logic isolated from interface concerns and makes the system easier to extend",
         },
         {
-          decision: "MongoDB over relational DB",
-          reasoning: "Schema flexibility needed for evolving business rules around scheduling",
+          decision: "Introduced reusable bindings, tray actions, and hotkeys",
+          reasoning:
+            "Turns one-off device commands into a persistent local control layer for repeated actions",
         },
         {
-          decision: "Role-based access at the API level",
-          reasoning: "Different permission needs for admins, doctors, and billing staff",
+          decision: "Used local token and config caching",
+          reasoning:
+            "Allows the desktop app to operate as a persistent control surface instead of restarting setup on every run",
         },
       ],
       tradeoffs: [
         {
-          tradeoff: "No real-time sync (WebSockets)",
-          reasoning: "Polling-based updates were sufficient for the user count and reduced complexity",
+          tradeoff: "Local desktop architecture instead of a cloud-mediated controller",
+          reasoning:
+            "Simpler and faster for single-user execution, but tied to the host machine and local environment",
         },
         {
-          tradeoff: "Monolithic deployment",
-          reasoning: "Faster to ship and maintain for a small team, but limits independent scaling",
+          tradeoff: "ADB-based Fire TV integration",
+          reasoning:
+            "Provides practical device control, but depends on network setup, debugging permissions, and device-specific behavior",
         },
       ],
       impactDetail: [
-        "Supported daily operations for 50+ doctors",
-        "Eliminated scheduling conflicts and billing inconsistencies",
-        "Replaced manual coordination with structured, queryable workflows",
+        "Unified Spotify playback transfer and Fire TV control inside one desktop system",
+        "Reduced repeated multi-step actions into reusable bindings and global shortcuts",
+        "Created a local orchestration layer rather than a passive status dashboard or single-purpose remote",
       ],
       futureWork: [
-        "Add real-time updates via WebSockets for schedule changes",
-        "Introduce automated billing reconciliation",
-        "Extract billing into a separate microservice for independent scaling",
+        "Add stronger error handling, diagnostics, and tests",
+        "Improve Fire TV app metadata and launcher discovery",
+        "Polish editing and management flows around bindings and execution history",
       ],
     },
   },

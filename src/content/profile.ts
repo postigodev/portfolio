@@ -8,7 +8,7 @@ export const profile = {
   linkedin: "https://linkedin.com/in/postigo/",
   resumeUrl: "/Piero_Postigo_Rocchetti_Resume.pdf",
   intro:
-    "I design and build backend systems that solve real operational problems. Focused on reliability, system design, and production debugging.",
+    "I build backend systems that replace manual operations and handle real-world complexity at scale.\nFocused on stateful systems, event-driven architectures, and production reliability.",
   education: {
     school: "Knox College",
     degree: "Bachelor of Science, Computer Science & Psychology",
