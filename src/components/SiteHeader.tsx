@@ -17,7 +17,7 @@ const SiteHeader = () => {
           to="/"
           className="font-mono text-sm font-medium text-foreground transition-colors hover:text-muted-foreground"
         >
-          {profile.name.toLowerCase().replace(/\s+/g, ".")}
+          🐐 {profile.name.toLowerCase().replace(/\s+/g, ".")}
         </Link>
         <nav className="flex items-center gap-6">
           {navItems.map((item) => (
