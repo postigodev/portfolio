@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@supports (color: oklch(0 0 0)) {
+  .dark {
+    --scrollbar-track: transparent;
+    --scrollbar-thumb-dimmed: oklch(100% 0 none / 0.06);
+    --scrollbar-thumb: oklch(100% 0 none / 0.14);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -73,11 +81,17 @@
   * {
     @apply border-border;
   }
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-dimmed, hsl(var(--muted-foreground) / 0.18))
+      var(--scrollbar-track, transparent);
+  }
+  html:hover {
+    scrollbar-color: var(--scrollbar-thumb, hsl(var(--muted-foreground) / 0.32))
+      var(--scrollbar-track, transparent);
+  }
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    background-image:
-      radial-gradient(circle at top left, hsl(var(--goat) / 0.08), transparent 24rem),
-      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)));
   }
   h1, h2, h3, h4 {
     @apply font-semibold tracking-tight;
@@ -85,15 +99,32 @@
   ::selection {
     @apply bg-goat/30 text-foreground;
   }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track, transparent);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-dimmed, hsl(var(--muted-foreground) / 0.18));
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb, hsl(var(--muted-foreground) / 0.32));
+    background-clip: padding-box;
+  }
 }
 
 @layer components {
   .section-label {
-    @apply font-mono text-[11px] uppercase tracking-[0.32em] text-goat/85;
+    @apply font-mono text-[11px] uppercase tracking-[0.28em] text-goat/80;
   }
 
   .dossier-panel {
-    @apply rounded-2xl border border-border/80 bg-card/60;
+    @apply border-t border-border/70 bg-transparent;
   }
 
   .stat-kicker {
@@ -101,6 +132,6 @@
   }
 
   .editorial-rule {
-    @apply h-px w-full bg-gradient-to-r from-transparent via-goat/70 to-transparent;
+    @apply h-px w-full bg-border/70;
   }
 }

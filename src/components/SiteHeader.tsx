@@ -11,19 +11,19 @@ const SiteHeader = () => {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/80 bg-background/90 backdrop-blur">
-      <div className="container flex h-16 items-center justify-between gap-6">
+    <header className="border-b border-border/70 bg-background/95">
+      <div className="container flex h-14 items-center justify-between gap-6">
         <Link
           to="/"
-          className="inline-flex min-w-0 items-center gap-3 text-sm text-foreground transition-colors hover:text-goat"
+          className="inline-flex min-w-0 items-center gap-2 text-sm text-foreground transition-colors hover:text-goat"
         >
-          <span className="text-sm leading-none">🐐</span>
+          <span className="text-xs leading-none">🐐</span>
           <span className="truncate font-mono font-medium tracking-tight">
             {profile.name.toLowerCase().replace(/\s+/g, ".")}
           </span>
         </Link>
 
-        <nav className="flex items-center gap-2 rounded-full border border-border/80 bg-card/60 p-1">
+        <nav className="flex items-center gap-5">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
 
@@ -31,9 +31,9 @@ const SiteHeader = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`rounded-full px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] transition-colors ${
+                className={`text-[11px] uppercase tracking-[0.24em] transition-colors ${
                   active
-                    ? "bg-goat/14 text-foreground"
+                    ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
