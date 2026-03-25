@@ -1,12 +1,27 @@
 import { ArrowLeft, Github } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import Layout from "@/components/Layout";
+import SectionReadingBar from "@/components/SectionReadingBar";
 import { systems } from "@/content/systems";
+import { useReadingSections } from "@/hooks/use-reading-sections";
 import { normalizeText } from "@/lib/utils";
 
 const SystemDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const system = systems.find((item) => item.slug === slug);
+  const sectionConfig = system?.detail
+    ? [
+        { id: "system-title", title: system.title },
+        { id: "system-problem-title", title: "Problem" },
+        { id: "system-constraints-title", title: "Constraints" },
+        { id: "system-design-title", title: "System design" },
+        { id: "system-decisions-title", title: "Key decisions" },
+        { id: "system-tradeoffs-title", title: "Tradeoffs" },
+        { id: "system-impact-title", title: "Impact" },
+        { id: "system-future-work-title", title: "Future work" },
+      ]
+    : [];
+  const { activeTitle, isVisible } = useReadingSections(sectionConfig);
 
   if (!system || !system.detail) {
     return (
@@ -26,6 +41,8 @@ const SystemDetail = () => {
 
   return (
     <Layout>
+      <SectionReadingBar title={activeTitle} visible={isVisible} />
+
       <article className="mx-auto max-w-4xl space-y-10 pb-8">
         <header className="space-y-5">
           <Link
@@ -38,7 +55,10 @@ const SystemDetail = () => {
 
           <div className="space-y-3">
             <p className="section-label">System dossier</p>
-            <h1 className="text-4xl font-semibold tracking-[-0.07em] text-foreground sm:text-5xl lg:text-6xl">
+            <h1
+              id="system-title"
+              className="text-4xl font-semibold tracking-[-0.07em] text-foreground sm:text-5xl lg:text-6xl"
+            >
               {system.title}
             </h1>
             <p className="max-w-3xl text-lg leading-8 text-foreground/88">
@@ -84,7 +104,9 @@ const SystemDetail = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Problem</p>
+          <p id="system-problem-title" className="section-label">
+            Problem
+          </p>
           <div className="space-y-4">
             {detail.problemDetail.split("\n\n").map((paragraph, i) => (
               <p key={i} className="text-base leading-8 text-muted-foreground">
@@ -96,7 +118,9 @@ const SystemDetail = () => {
 
         {detail.constraints && detail.constraints.length > 0 && (
           <section className="space-y-4 border-t border-border/70 pt-6">
-            <p className="section-label">Constraints</p>
+            <p id="system-constraints-title" className="section-label">
+              Constraints
+            </p>
             <ul className="space-y-2">
               {detail.constraints.map((constraint, i) => (
                 <li key={i} className="text-sm leading-7 text-muted-foreground">
@@ -108,7 +132,9 @@ const SystemDetail = () => {
         )}
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">System design</p>
+          <p id="system-design-title" className="section-label">
+            System design
+          </p>
           <div className="space-y-4">
             {architectureBlocks.map((block, i) => {
               const isList = block.startsWith("- ");
@@ -141,7 +167,9 @@ const SystemDetail = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Key decisions</p>
+          <p id="system-decisions-title" className="section-label">
+            Key decisions
+          </p>
           <div>
             {detail.keyDecisions.map((decision) => (
               <div key={decision.decision} className="border-t border-border/70 py-4 first:border-t-0 first:pt-0">
@@ -157,7 +185,9 @@ const SystemDetail = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Tradeoffs</p>
+          <p id="system-tradeoffs-title" className="section-label">
+            Tradeoffs
+          </p>
           <div>
             {detail.tradeoffs.map((tradeoff) => (
               <div key={tradeoff.tradeoff} className="border-t border-border/70 py-4 first:border-t-0 first:pt-0">
@@ -173,7 +203,9 @@ const SystemDetail = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Impact</p>
+          <p id="system-impact-title" className="section-label">
+            Impact
+          </p>
           <ul className="space-y-3">
             {detail.impactDetail.map((item, i) => (
               <li key={i} className="text-sm leading-7 text-foreground">
@@ -185,7 +217,9 @@ const SystemDetail = () => {
 
         {detail.futureWork && detail.futureWork.length > 0 && (
           <section className="space-y-4 border-t border-border/70 pt-6">
-            <p className="section-label">Future work</p>
+            <p id="system-future-work-title" className="section-label">
+              Future work
+            </p>
             <ul className="space-y-2">
               {detail.futureWork.map((item, i) => (
                 <li key={i} className="text-sm leading-7 text-muted-foreground">

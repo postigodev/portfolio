@@ -2,11 +2,13 @@ import { FileText, Github, Linkedin, Mail } from "lucide-react";
 import ExperienceCard from "@/components/ExperienceCard";
 import GitHubRepoCard from "@/components/GitHubRepoCard";
 import Layout from "@/components/Layout";
+import SectionReadingBar from "@/components/SectionReadingBar";
 import SystemCard from "@/components/SystemCard";
 import { Button } from "@/components/ui/button";
 import { experience } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { systems } from "@/content/systems";
+import { useReadingSections } from "@/hooks/use-reading-sections";
 import { useGitHubRepos } from "@/hooks/use-github-repos";
 import { normalizeText } from "@/lib/utils";
 
@@ -32,17 +34,28 @@ const Index = () => {
   const featuredExperience = experience.filter((item) => item.featured);
   const { data: repos, isLoading: reposLoading } = useGitHubRepos();
   const introParts = normalizeText(profile.intro).split("\n");
+  const { activeTitle, isVisible } = useReadingSections([
+    { id: "home-hero-title", title: profile.name },
+    { id: "home-systems-label", title: "Selected systems" },
+    { id: "home-experience-label", title: "Experience" },
+    { id: "home-open-source-label", title: "Open source" },
+  ]);
 
   return (
     <Layout>
+      <SectionReadingBar title={activeTitle} visible={isVisible} />
+
       <article className="mx-auto max-w-4xl space-y-14 pb-8 md:space-y-16">
         <section className="space-y-6">
           <p className="section-label">Systems engineer / production thinking</p>
-          <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.07em] text-foreground sm:text-6xl lg:text-7xl">
+          <h1
+            id="home-hero-title"
+            className="max-w-4xl text-5xl font-semibold tracking-[-0.07em] text-foreground sm:text-6xl lg:text-7xl"
+          >
             {profile.name}
           </h1>
           <p className="max-w-3xl text-lg leading-8 text-foreground/88 sm:text-xl">
-            Backend systems for real-world constraints and failure.
+            Backend systems designed for real-world constraints and failure.
           </p>
 
           <div className="space-y-3 text-[15px] leading-8 text-muted-foreground">
@@ -87,8 +100,12 @@ const Index = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Selected systems</p>
-          <h2 className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl">
+          <p id="home-systems-label" className="section-label">
+            Selected systems
+          </p>
+          <h2
+            className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl"
+          >
             Two systems, each framed as architecture, decisions, and operational tradeoffs.
           </h2>
 
@@ -100,7 +117,9 @@ const Index = () => {
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
-          <p className="section-label">Experience</p>
+          <p id="home-experience-label" className="section-label">
+            Experience
+          </p>
           <h2 className="text-3xl font-semibold tracking-[-0.05em] text-foreground">
             Roles shaped by debugging, infrastructure, and system behavior.
           </h2>
@@ -114,7 +133,9 @@ const Index = () => {
 
         <section className="space-y-4 border-t border-border/70 pt-6">
           <div className="space-y-2">
-            <p className="section-label">Open source</p>
+            <p id="home-open-source-label" className="section-label">
+              Open source
+            </p>
             <h2 className="text-2xl font-semibold tracking-[-0.04em] text-foreground">
               Supporting experiments and public systems work.
             </h2>
