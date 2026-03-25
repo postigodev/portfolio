@@ -2,7 +2,6 @@ import { ArrowLeft, Github } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { systems } from "@/content/systems";
 import { normalizeText } from "@/lib/utils";
 
@@ -24,164 +23,217 @@ const SystemDetail = () => {
   }
 
   const { detail } = system;
+  const architectureBlocks = detail.architecture.split("\n\n").map((block) => normalizeText(block));
+  const overviewSummary = normalizeText(detail.overview).split(". ")[0] + ".";
+  const impactSummary = normalizeText(detail.impactDetail[0] ?? system.impact);
 
   return (
     <Layout>
-      <article className="max-w-2xl">
-        <Link
-          to="/"
-          className="mb-8 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-3 w-3" /> Back
-        </Link>
+      <article className="mx-auto max-w-6xl space-y-12">
+        <div className="space-y-8 border-b border-border/80 pb-12">
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground transition-colors hover:text-goat"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to systems
+          </Link>
 
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">{system.title}</h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {normalizeText(system.system)}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {system.stack.map((tech) => (
-            <Badge key={tech} variant="secondary" className="text-xs font-mono font-normal">
-              {tech}
-            </Badge>
-          ))}
-          {system.repoUrl && (
-            <Badge>
-              <a
-                href={system.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Github className="h-4 w-4 transition-transform group-hover:scale-110" />
-                Source
-              </a>
-            </Badge>
-          )}
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,22rem)] lg:items-end">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <p className="section-label">System dossier</p>
+                <h1 className="max-w-4xl text-4xl font-semibold tracking-[-0.07em] text-foreground sm:text-5xl lg:text-6xl">
+                  {system.title}
+                </h1>
+                <p className="max-w-3xl text-lg leading-8 text-foreground/88">
+                  {normalizeText(system.system)}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {system.stack.map((tech) => (
+                  <Badge
+                    key={tech}
+                    variant="secondary"
+                    className="rounded-full border border-border/80 bg-card/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground"
+                  >
+                    {tech}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            <aside className="dossier-panel overflow-hidden">
+              <div className="editorial-rule" />
+              <div className="space-y-6 p-6">
+                <div className="space-y-2">
+                  <p className="stat-kicker">Role in portfolio</p>
+                  <p className="text-sm leading-7 text-muted-foreground">
+                    Technical case study focused on problem framing, system boundaries, and
+                    operational tradeoffs.
+                  </p>
+                </div>
+
+                {system.repoUrl && (
+                  <a
+                    href={system.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground transition-colors hover:text-goat"
+                  >
+                    <Github className="h-3.5 w-3.5" />
+                    View source
+                  </a>
+                )}
+              </div>
+            </aside>
+          </div>
         </div>
 
-        <Separator className="my-8" />
-
-        <section className="space-y-8">
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Overview</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {normalizeText(detail.overview)}
+        <section className="grid gap-4 lg:grid-cols-3">
+          <article className="dossier-panel p-6">
+            <p className="stat-kicker">Problem</p>
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">
+              {normalizeText(system.problem)}
             </p>
-          </div>
+          </article>
+          <article className="dossier-panel p-6">
+            <p className="stat-kicker">Architecture</p>
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">{overviewSummary}</p>
+          </article>
+          <article className="dossier-panel p-6">
+            <p className="stat-kicker">Impact</p>
+            <p className="mt-4 text-sm leading-7 text-muted-foreground">{impactSummary}</p>
+          </article>
+        </section>
 
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Problem</h2>
-            <div className="mt-2 space-y-2">
-              {detail.problemDetail.split("\n\n").map((paragraph, i) => (
-                <p key={i} className="text-sm leading-relaxed text-muted-foreground">
-                  {normalizeText(paragraph)}
-                </p>
-              ))}
-            </div>
-          </div>
+        <section className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_20rem]">
+          <div className="space-y-12">
+            <section className="space-y-4">
+              <p className="section-label">Overview</p>
+              <p className="max-w-3xl text-base leading-8 text-muted-foreground">
+                {normalizeText(detail.overview)}
+              </p>
+            </section>
 
-          {detail.constraints && detail.constraints.length > 0 && (
-            <div>
-              <h2 className="text-base font-semibold text-foreground">Constraints</h2>
-              <ul className="mt-2 space-y-1">
-                {detail.constraints.map((constraint, i) => (
-                  <li key={i} className="text-sm leading-relaxed text-muted-foreground">
-                    - {normalizeText(constraint)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div>
-            <h2 className="text-base font-semibold text-foreground">System Design</h2>
-            <div className="mt-2 space-y-2">
-              {detail.architecture.split("\n\n").map((block, i) => {
-                const normalizedBlock = normalizeText(block);
-
-                if (normalizedBlock.startsWith("- ") || normalizedBlock.startsWith("• ")) {
-                  return (
-                    <ul key={i} className="space-y-1">
-                      {normalizedBlock.split("\n").map((line, j) => (
-                        <li key={j} className="text-sm leading-relaxed text-muted-foreground">
-                          {line.replace(/^•\s?/, "- ")}
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-
-                return (
-                  <p key={i} className="text-sm leading-relaxed text-muted-foreground">
-                    {normalizedBlock}
+            <section className="space-y-4">
+              <p className="section-label">Problem</p>
+              <div className="space-y-4">
+                {detail.problemDetail.split("\n\n").map((paragraph, i) => (
+                  <p key={i} className="max-w-3xl text-base leading-8 text-muted-foreground">
+                    {normalizeText(paragraph)}
                   </p>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            </section>
 
-            {detail.architectureDiagram && (
-              <pre className="mt-4 overflow-x-auto rounded-md border border-border bg-muted/50 p-4 font-mono text-xs leading-relaxed text-muted-foreground">
-                {normalizeText(detail.architectureDiagram)}
-              </pre>
+            <section className="space-y-4">
+              <p className="section-label">System design</p>
+              <div className="dossier-panel p-6">
+                <div className="space-y-4">
+                  {architectureBlocks.map((block, i) => {
+                    const isList = block.startsWith("- ");
+
+                    if (isList) {
+                      return (
+                        <ul key={i} className="space-y-2">
+                          {block.split("\n").map((line, j) => (
+                            <li key={j} className="text-sm leading-7 text-muted-foreground">
+                              {line}
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    }
+
+                    return (
+                      <p key={i} className="text-sm leading-7 text-muted-foreground">
+                        {block}
+                      </p>
+                    );
+                  })}
+                </div>
+
+                {detail.architectureDiagram && (
+                  <pre className="mt-6 overflow-x-auto rounded-xl border border-border/80 bg-background/70 p-5 font-mono text-xs leading-6 text-muted-foreground">
+                    {normalizeText(detail.architectureDiagram)}
+                  </pre>
+                )}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <p className="section-label">Key decisions</p>
+              <div className="grid gap-4 md:grid-cols-2">
+                {detail.keyDecisions.map((decision) => (
+                  <article key={decision.decision} className="dossier-panel p-6">
+                    <h2 className="text-xl font-semibold tracking-[-0.04em] text-foreground">
+                      {normalizeText(decision.decision)}
+                    </h2>
+                    <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                      {normalizeText(decision.reasoning)}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <p className="section-label">Tradeoffs</p>
+              <div className="grid gap-4 md:grid-cols-2">
+                {detail.tradeoffs.map((tradeoff) => (
+                  <article key={tradeoff.tradeoff} className="dossier-panel p-6">
+                    <h2 className="text-xl font-semibold tracking-[-0.04em] text-foreground">
+                      {normalizeText(tradeoff.tradeoff)}
+                    </h2>
+                    <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                      {normalizeText(tradeoff.reasoning)}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
+            {detail.constraints && detail.constraints.length > 0 && (
+              <section className="dossier-panel p-6">
+                <p className="section-label">Constraints</p>
+                <ul className="mt-5 space-y-3">
+                  {detail.constraints.map((constraint, i) => (
+                    <li key={i} className="text-sm leading-7 text-muted-foreground">
+                      - {normalizeText(constraint)}
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
-          </div>
 
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Key Decisions</h2>
-            <ul className="mt-3 space-y-3">
-              {detail.keyDecisions.map((decision, i) => (
-                <li key={i}>
-                  <p className="text-sm font-medium text-foreground">
-                    {normalizeText(decision.decision)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    -&gt; {normalizeText(decision.reasoning)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Tradeoffs</h2>
-            <ul className="mt-3 space-y-3">
-              {detail.tradeoffs.map((tradeoff, i) => (
-                <li key={i}>
-                  <p className="text-sm font-medium text-foreground">
-                    {normalizeText(tradeoff.tradeoff)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    -&gt; {normalizeText(tradeoff.reasoning)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Impact</h2>
-            <ul className="mt-2 space-y-1">
-              {detail.impactDetail.map((item, i) => (
-                <li key={i} className="text-sm font-medium leading-relaxed text-foreground">
-                  {normalizeText(item)}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {detail.futureWork && detail.futureWork.length > 0 && (
-            <div>
-              <h2 className="text-base font-semibold text-foreground">Future Work</h2>
-              <ul className="mt-2 space-y-1">
-                {detail.futureWork.map((item, i) => (
-                  <li key={i} className="text-sm leading-relaxed text-muted-foreground">
-                    - {normalizeText(item)}
+            <section className="dossier-panel p-6">
+              <p className="section-label">Impact</p>
+              <ul className="mt-5 space-y-4">
+                {detail.impactDetail.map((item, i) => (
+                  <li key={i} className="border-l border-goat/50 pl-4 text-sm leading-7 text-foreground">
+                    {normalizeText(item)}
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
+            </section>
+
+            {detail.futureWork && detail.futureWork.length > 0 && (
+              <section className="dossier-panel p-6">
+                <p className="section-label">Future work</p>
+                <ul className="mt-5 space-y-3">
+                  {detail.futureWork.map((item, i) => (
+                    <li key={i} className="text-sm leading-7 text-muted-foreground">
+                      - {normalizeText(item)}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </aside>
         </section>
       </article>
     </Layout>

@@ -6,40 +6,77 @@ import { normalizeText } from "@/lib/utils";
 
 const SystemCard = ({ system }: { system: System }) => {
   return (
-    <div className="group space-y-3 rounded-lg border border-border p-5 transition-colors hover:border-foreground/20">
-      <Link to={`/systems/${system.slug}`} className="block space-y-2.5">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-base font-semibold text-foreground">{system.title}</h3>
-          <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+    <article className="group relative overflow-hidden rounded-2xl border border-border/80 bg-card/70 p-6 transition-all hover:-translate-y-0.5 hover:border-goat/40 hover:bg-card">
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-goat/80 to-transparent opacity-70" />
+
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-goat/80">
+            System dossier
+          </p>
+          <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-foreground">
+            {system.title}
+          </h3>
         </div>
-        <div className="space-y-1 text-sm leading-relaxed">
-          <p className="text-muted-foreground">{normalizeText(system.problem)}</p>
-          <p className="text-foreground">{normalizeText(system.system)}</p>
-          <p className="font-medium text-foreground">{normalizeText(system.impact)}</p>
+        <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-goat" />
+      </div>
+
+      <Link to={`/systems/${system.slug}`} className="mt-6 block">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          <div className="space-y-2">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+              Problem
+            </p>
+            <p className="text-sm leading-7 text-muted-foreground">
+              {normalizeText(system.problem)}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                System
+              </p>
+              <p className="mt-2 text-sm leading-7 text-foreground">
+                {normalizeText(system.system)}
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted-foreground">
+                Impact
+              </p>
+              <p className="mt-2 text-sm font-medium leading-7 text-foreground">
+                {normalizeText(system.impact)}
+              </p>
+            </div>
+          </div>
         </div>
       </Link>
-      <div className="flex flex-wrap gap-1.5 pt-1">
+
+      <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-border/80 pt-5">
         {system.stack.map((tech) => (
-          <Badge key={tech} variant="secondary" className="text-xs font-mono font-normal">
+          <Badge
+            key={tech}
+            variant="secondary"
+            className="rounded-full border border-border/70 bg-background/60 px-2.5 py-1 font-mono text-[11px] font-normal uppercase tracking-[0.18em] text-muted-foreground"
+          >
             {tech}
           </Badge>
         ))}
         {system.repoUrl && (
-          <Badge>
-            <a
-              href={system.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Github className="h-4 w-4 transition-transform group-hover:scale-110" />
-              Source
-            </a>
-          </Badge>
+          <a
+            href={system.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-goat"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Github className="h-3.5 w-3.5" />
+            Source
+          </a>
         )}
       </div>
-    </div>
+    </article>
   );
 };
 
