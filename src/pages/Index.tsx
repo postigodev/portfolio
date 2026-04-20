@@ -106,10 +106,10 @@ const Index = () => {
           <h2
             className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl"
           >
-            Two systems, each framed as architecture, decisions, and operational tradeoffs.
+            Systems built around architecture, decisions, and operational tradeoffs.
           </h2>
 
-          <div>
+          <div className="pt-1">
             {systems.map((system) => (
               <SystemCard key={system.id} system={system} />
             ))}

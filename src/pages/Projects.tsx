@@ -12,13 +12,17 @@ const Projects = () => {
 
   return (
     <Layout>
-      <div className="max-w-2xl">
+      <div className="max-w-4xl">
         <section>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Selected Systems</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Key systems I designed and built - not side projects.
+          <p className="section-label">Systems</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-foreground sm:text-4xl">
+            Selected systems, documented as architecture work.
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+            Dossiers for systems I designed and built: what broke, how the system is shaped,
+            and what changed operationally.
           </p>
-          <div className="mt-8 grid gap-4">
+          <div className="mt-7">
             {systems.map((system) => (
               <SystemCard key={system.id} system={system} />
             ))}
@@ -27,7 +31,7 @@ const Projects = () => {
 
         <Separator className="my-12" />
 
-        <section>
+        <section className="max-w-2xl">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold text-foreground">Open Source</h2>
             <a

@@ -38,6 +38,7 @@ const SystemDetail = () => {
 
   const { detail } = system;
   const architectureBlocks = detail.architecture.split("\n\n").map((block) => normalizeText(block));
+  const visibleStack = system.displayStack ?? system.stack.slice(0, 6);
 
   return (
     <Layout>
@@ -61,19 +62,31 @@ const SystemDetail = () => {
             >
               {system.title}
             </h1>
+            <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-goat/80">
+              {system.category}
+            </p>
             <p className="max-w-3xl text-lg leading-8 text-foreground/88">
-              {normalizeText(system.system)}
+              {normalizeText(system.hook)}
             </p>
           </div>
 
-          <div className="flex items-start justify-between gap-6 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="flex-1">{system.stack.join(" | ")}</span>
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex flex-1 flex-wrap gap-2">
+              {visibleStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="border border-border/80 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/82"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
             {system.repoUrl && (
               <a
                 href={system.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-2 transition-colors hover:text-foreground"
+                className="inline-flex shrink-0 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Github className="h-3.5 w-3.5" />
                 Source
@@ -82,25 +95,32 @@ const SystemDetail = () => {
           </div>
         </header>
 
-        <section className="grid gap-5 border-t border-border/70 pt-6 md:grid-cols-3">
-          <div>
+        <section className="grid gap-5 border-t border-border/70 pt-6 md:grid-cols-[0.82fr_1.12fr_1.18fr]">
+          <div className="text-muted-foreground/78">
             <p className="stat-kicker">Problem</p>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
+            <p className="mt-2 text-xs leading-6">
               {normalizeText(system.problem)}
             </p>
           </div>
           <div>
             <p className="stat-kicker">System</p>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              {normalizeText(detail.overview)}
+            <p className="mt-2 text-sm leading-7 text-foreground/86">
+              {normalizeText(system.system)}
             </p>
           </div>
-          <div>
-            <p className="stat-kicker">Impact</p>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              {normalizeText(detail.impactDetail[0] ?? system.impact)}
+          <div className="border-l border-goat/30 pl-4">
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-goat/85">Impact</p>
+            <p className="mt-2 text-sm font-medium leading-7 text-foreground">
+              {normalizeText(system.impact)}
             </p>
           </div>
+        </section>
+
+        <section className="space-y-4 border-t border-border/70 pt-6">
+          <p className="section-label">Overview</p>
+          <p className="max-w-3xl text-base leading-8 text-muted-foreground">
+            {normalizeText(detail.overview)}
+          </p>
         </section>
 
         <section className="space-y-4 border-t border-border/70 pt-6">
